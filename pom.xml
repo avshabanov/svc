@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.truward.brikar</groupId>
+    <artifactId>brikar</artifactId>
+    <version>1.8.33</version>
+  </parent>
+
+  <groupId>svc</groupId>
+  <artifactId>svc</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Sample Services</name>
+
+  <description>
+    Sample Services Parent Module
+  </description>
+
+  <modules>
+  </modules>
+
+  <properties>
+
+    <!-- common libraries -->
+    <awssdk.version>1.9.13</awssdk.version>
+
+    <brikar.version>1.8.33</brikar.version>
+
+    <utc-time.version>1.0.6</utc-time.version>
+
+    <xodus.version>1.0.4</xodus.version>
+
+    <!--  compiler settings -->
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencyManagement>
+
+    <dependencies>
+      <!-- Brikar -->
+      <dependency>
+        <groupId>com.truward.brikar.protobuf</groupId>
+        <artifactId>brikar-protobuf-http-bin</artifactId>
+        <version>${brikar.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.protobuf</groupId>
+        <artifactId>brikar-protobuf-jackson</artifactId>
+        <version>${brikar.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.protobuf</groupId>
+        <artifactId>brikar-protobuf-http-json</artifactId>
+        <version>${brikar.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar</groupId>
+        <artifactId>brikar-common</artifactId>
+        <version>${brikar.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar</groupId>
+        <artifactId>brikar-client</artifactId>
+        <version>${brikar.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar</groupId>
+        <artifactId>brikar-server</artifactId>
+        <version>${brikar.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar</groupId>
+        <artifactId>brikar-error-response</artifactId>
+        <version>${brikar.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar</groupId>
+        <artifactId>brikar-maintenance</artifactId>
+        <version>${brikar.version}</version>
+      </dependency>
+
+      <!-- Semantic ID -->
+      <dependency>
+        <groupId>com.truward.semantic</groupId>
+        <artifactId>semantic-id</artifactId>
+        <version>3.0.3</version>
+      </dependency>
+
+      <!-- Google Guava https://mvnrepository.com/artifact/com.google.guava/guava -->
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>20.0</version>
+      </dependency>
+
+      <!-- UTC time -->
+      <dependency>
+        <groupId>com.truward.time</groupId>
+        <artifactId>utc-time</artifactId>
+        <version>${utc-time.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.time</groupId>
+        <artifactId>utc-time-sql</artifactId>
+        <version>${utc-time.version}</version>
+      </dependency>
+
+      <!-- AWS SDK -->
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-s3</artifactId>
+        <version>${awssdk.version}</version>
+      </dependency>
+
+      <!-- Spring Persistence -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-tx</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <!-- Key-Value DB -->
+      <dependency>
+        <groupId>org.jetbrains.xodus</groupId>
+        <artifactId>xodus-openAPI</artifactId>
+        <version>${xodus.version}</version>
+      </dependency>
+
+      <!-- DB Drivers -->
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>1.4.190</version>
+      </dependency>
+
+      <!-- Connection Pooling -->
+      <dependency>
+        <groupId>com.mchange</groupId>
+        <artifactId>c3p0</artifactId>
+        <version>0.9.5</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
+
