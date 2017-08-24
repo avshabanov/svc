@@ -28,6 +28,7 @@ message Account {
   string type = 2;
 
   // Global user alias, can be optional (in this case profile with the contacts should be given)
+  // Valid values are alphanumerical only (only latin alphabet and numbers are allowed)
   string username = 3;
 
   string passwordHash = 4;
