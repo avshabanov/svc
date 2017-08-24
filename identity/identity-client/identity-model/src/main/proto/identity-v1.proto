@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package truward.services.identity;
+
+option java_package = "com.truward.services.identity";
+option java_outer_classname = "IdentityV1";
+
+enum ContactType {
+  UNKNOWN = 0;
+  PHONE = 1;
+  EMAIL = 2;
+}
+
+message Contact {
+  string value = 1;
+  ContactType type = 2;
+}
+
+message AuthorityReference {
+  string servicePath = 1;
+  string roleName = 2;
+}
+
+message Account {
+
+  string userId = 1;
+
+  string nickname = 2;
+
+  string passwordHash = 3;
+
+  repeated Contact contacts = 4;
+
+  repeated AuthorityReference authorities = 5;
+
+  // Time, when account was created
+  // Format: unix time in milliseconds
+  int64 created = 6;
+
+  // Time, when account was updated
+  // Format: unix time in milliseconds
+  int64 updated = 7;
+
+  bool active = 8;
+}
+
+message UpdateAccount {
+  string nickname = 1;
+
+  string passwordHash = 2;
+
+
+}
+
+//
+// Service Messages and API:
+//  * List Accounts (admin) by offsetToken, limit -> Account[], offsetToken
+//  * Lookup Account (service, admin) by username -> Account
+//  * Register Account (service, admin) -> Account
+//  * Update Account (service, admin) -> Account
+//  * Delete Account (admin)
+//  * Reset Password Hash (service) userId, oldPasswordHash, newPasswordHash -> userId
+//  * Create Invitation Token (service) count, authorities -> string[] (invitation tokens)
+//
+
+// rpc ListAccounts
+
+message ListAccountsRequest {
+  string offsetToken = 1;
+  string limit = 2;
+}
+
+message ListAccountsResponse {
+  string offsetToken = 1;
+  repeated Account accounts = 2;
+}
+
+// rpc LookupAccount
+
+message LookupAccountRequest {
+  string name = 1;
+}
+
+message LookupAccountResponse {
+  Account account = 1;
+}
+
+// Account service definition
+service AccountService {
+  rpc ListAccounts (ListAccountsRequest) returns (ListAccountsResponse);
+  rpc LookupAccount (LookupAccountRequest) returns (LookupAccountResponse);
+}
