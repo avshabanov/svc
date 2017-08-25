@@ -16,9 +16,9 @@ syntax = "proto3";
 
 package truward.api;
 
-option go_package = "truward.golang.org/genproto/truwardapis/api/annotations;annotations";
+option go_package = "truward.golang.org/genproto/truwardapis/api/core;core";
 option java_multiple_files = true;
-option java_outer_classname = "UpdateProto";
+option java_outer_classname = "CoreProto";
 option java_package = "com.truward.services.api";
 option objc_class_prefix = "TAPI";
 

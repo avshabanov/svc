@@ -19,6 +19,7 @@
   </description>
 
   <modules>
+    <module>api-model</module>
     <module>identity</module>
   </modules>
 

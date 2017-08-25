@@ -12,24 +12,11 @@
   <name>Identity Model</name>
 
   <dependencies>
+
     <dependency>
-      <groupId>com.google.protobuf</groupId>
-      <artifactId>protobuf-java</artifactId>
+      <groupId>com.truward.services</groupId>
+      <artifactId>api-model</artifactId>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <!-- Protocol Buffers -->
-      <plugin>
-        <groupId>com.google.protobuf</groupId>
-        <artifactId>protoc</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.xolstice.maven.plugins</groupId>
-        <artifactId>protobuf-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 </project>
 

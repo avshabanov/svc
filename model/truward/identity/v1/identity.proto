@@ -21,7 +21,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 import "truward/api/annotations.proto";
-import "truward/api/update.proto";
+import "truward/core/update.proto";
 
 option go_package = "truward.golang.org/genproto/truwardapis/api/identity/v1;identity";
 option java_multiple_files = true;
@@ -29,7 +29,38 @@ option java_outer_classname = "IdentityProto";
 option java_package = "com.truward.services.api.identity.v1";
 option objc_class_prefix = "TAPI";
 
+
+// Identity service
+service IdentityService {
+
+  rpc listAccounts (ListAccountsRequest) returns (ListAccountsResponse) {
+    option (truward.api.http) = {
+      post: "/v1/accounts?offsetToken={offsetToken}&limit={limit}"
+      body: "*"
+    };
+  }
+
+  rpc lookupAccount (LookupAccountRequest) returns (AccountProfile) {
+    option (truward.api.http) = { get: "/v1/accounts/name:{username}" };
+  }
+
+  rpc registerAccount (RegisterAccountRequest) returns (RegisterAccountResponse) {
+    option (truward.api.http) = { post: "/v1/accounts/{username=name:*}" body: "*" };
+  }
+
+  rpc updateAccount (UpdateAccountRequest) returns (AccountProfile) {
+    option (truward.api.http) = { put: "/v1/accounts/{username=name:*}" body: "*" };
+  }
+
+  rpc deleteAccounts (DeleteAccountsRequest) returns (google.protobuf.Empty) {
+    option (truward.api.http) = { delete: "/v1/accounts" body: "*" };
+  }
+}
+
+
+
 enum ContactType {
+
   UNKNOWN = 0;
 
   PHONE = 1;
@@ -117,15 +148,15 @@ message Profile {
   string gender = 6;
 }
 
+message AccountProfile {
+
+  Account account = 1;
+
+  Profile profile = 2;
+}
+
 //
-// Service Messages and API:
-//  * List Accounts (admin) by offsetToken, limit -> Account[], offsetToken
-//  * Lookup Account (service, admin) by username -> Account
-//  * Register Account (service, admin) -> Account
-//  * Update Account (service, admin) -> Account
-//  * Delete Account (admin)
-//  * Reset Password Hash (service) userId, oldPasswordHash, newPasswordHash -> userId
-//  * Create Invitation Token (service) count, authorities -> string[] (invitation tokens)
+// Service Messages and API
 //
 
 message ListAccountsRequest {
@@ -146,13 +177,6 @@ message LookupAccountRequest {
 
   // User account alias, it can be a username or a contact value
   string alias = 1;
-}
-
-message LookupAccountResponse {
-
-  Account account = 1;
-
-  Profile profile = 2;
 }
 
 message RegisterAccountRequest {
@@ -225,41 +249,7 @@ message UpdateAccountRequest {
   UpdateProfile profile = 7;
 }
 
-message UpdateAccountResponse {
-
-  Account account = 1;
-
-  Profile profile = 2;
-}
-
 message DeleteAccountsRequest {
 
   repeated string userIds = 1;
-}
-
-// Account service definition
-service AccountService {
-
-  rpc listAccounts (ListAccountsRequest) returns (ListAccountsResponse) {
-    option (truward.api.http) = {
-      post: "/v1/accounts?offsetToken={offsetToken}&limit={limit}"
-      body: "*"
-    };
-  }
-
-  rpc lookupAccount (LookupAccountRequest) returns (LookupAccountResponse) {
-    option (truward.api.http) = { get: "/v1/accounts/name:{username}" };
-  }
-
-  rpc registerAccount (RegisterAccountRequest) returns (RegisterAccountResponse) {
-    option (truward.api.http) = { post: "/v1/accounts/{username=name:*}" body: "*" };
-  }
-
-  rpc updateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
-    option (truward.api.http) = { put: "/v1/accounts/{username=name:*}" body: "*" };
-  }
-
-  rpc deleteAccounts (DeleteAccountsRequest) returns (google.protobuf.Empty) {
-    option (truward.api.http) = { delete: "/v1/accounts" body: "*" };
-  }
 }

@@ -9,15 +9,15 @@
   </parent>
 
   <groupId>com.truward.services</groupId>
-  <artifactId>identity-client</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <artifactId>api-model</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
 
   <url>https://github.com/avshabanov/svc</url>
-  <packaging>pom</packaging>
-  <name>User Service Client</name>
+  <packaging>jar</packaging>
+  <name>Service API Model</name>
 
   <description>
-    Identity clients.
+    Service API Model Definitions
   </description>
 
   <licenses>
@@ -60,27 +60,35 @@
     <system>GitHub Issues</system>
   </issueManagement>
 
-  <modules>
-    <module>identity-model</module>
-  </modules>
-
   <properties>
-    <brikar.version>1.9.37</brikar.version>
-
     <!--  compiler settings -->
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+    </dependency>
+  </dependencies>
 
-      <dependency>
-        <groupId>com.truward.services</groupId>
-        <artifactId>api-model</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <build>
+    <plugins>
+      <!-- Protocol Buffers -->
+      <plugin>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protoc</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.xolstice.maven.plugins</groupId>
+        <artifactId>protobuf-maven-plugin</artifactId>
+        <configuration>
+          <protoSourceRoot>../model</protoSourceRoot>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
+
 
