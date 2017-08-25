@@ -1,0 +1,265 @@
+// Copyright (c) 2015, Google Inc.
+// Copyright 2017 Alex Shabanov
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package truward.api.identity.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+import "truward/api/annotations.proto";
+import "truward/api/update.proto";
+
+option go_package = "truward.golang.org/genproto/truwardapis/api/identity/v1;identity";
+option java_multiple_files = true;
+option java_outer_classname = "IdentityProto";
+option java_package = "com.truward.services.api.identity.v1";
+option objc_class_prefix = "TAPI";
+
+enum ContactType {
+  UNKNOWN = 0;
+
+  PHONE = 1;
+
+  EMAIL = 2;
+}
+
+message Contact {
+
+  string value = 1;
+
+  ContactType type = 2;
+}
+
+message Account {
+
+  string userId = 1;
+
+  // Account type, should be "person" or "service"
+  string type = 2;
+
+  // Global user alias, can be optional (in this case profile with the contacts should be given)
+  // Valid values are alphanumerical only (only latin alphabet and numbers are allowed)
+  string username = 3;
+
+  string passwordHash = 4;
+
+  // List of roles associated with the account, e.g.
+  // `log/viewer`, `log/writer`, `db/admin`, etc.
+  // every account assumed to implicitly own the role "user/{id}/owner"
+  repeated string roles = 5;
+
+  // Time, when account was created
+  google.protobuf.Timestamp created = 6;
+
+  // Time, when account was updated
+  google.protobuf.Timestamp updated = 7;
+
+  // Indicates, whether current account is active
+  bool active = 8;
+
+  // `etag` is used for optimistic concurrency control as a way to help
+  // prevent simultaneous updates of an account from overwriting each other.
+  //
+  // It is strongly suggested that systems make use of the `etag` in the
+  // read-modify-write cycle to perform account updates in order to avoid race
+  // conditions: An `etag` is returned in the response to `getAccount`, and
+  // systems are expected to put that etag in the request to `updateAccount` to
+  // ensure that their change will be applied to the same version of the policy.
+  //
+  // If no `etag` is provided in the call to `updateAccount`, then the existing
+  // policy is overwritten blindly.
+  string etag = 9;
+}
+
+message Image {
+
+  // A type of image, allowed values:
+  // `avatar`, `photo`
+  string kind = 1;
+
+  // An URL to the image, e.g.
+  // https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=120
+  string url = 2;
+}
+
+message Profile {
+
+  // Full display name, e.g. `John Doe`
+  string displayName = 1;
+
+  // Given name, e.g. `John`
+  string givenName = 2;
+
+  // Family name, e.g. `Doe`
+  string familyName = 3;
+
+  // List of images, associated with this profile
+  repeated Image images = 4;
+
+  // List of user contacts
+  repeated Contact contacts = 5;
+
+  // Optional, user gender code, allowed values if set: `F` and `M`
+  string gender = 6;
+}
+
+//
+// Service Messages and API:
+//  * List Accounts (admin) by offsetToken, limit -> Account[], offsetToken
+//  * Lookup Account (service, admin) by username -> Account
+//  * Register Account (service, admin) -> Account
+//  * Update Account (service, admin) -> Account
+//  * Delete Account (admin)
+//  * Reset Password Hash (service) userId, oldPasswordHash, newPasswordHash -> userId
+//  * Create Invitation Token (service) count, authorities -> string[] (invitation tokens)
+//
+
+message ListAccountsRequest {
+
+  string offsetToken = 1;
+
+  string limit = 2;
+}
+
+message ListAccountsResponse {
+
+  string offsetToken = 1;
+
+  repeated Account accounts = 2;
+}
+
+message LookupAccountRequest {
+
+  // User account alias, it can be a username or a contact value
+  string alias = 1;
+}
+
+message LookupAccountResponse {
+
+  Account account = 1;
+
+  Profile profile = 2;
+}
+
+message RegisterAccountRequest {
+
+  // Account type, should be "person" or "service"
+  string type = 1;
+
+  // Global user alias, can be optional (in this case profile with the contacts should be given)
+  string username = 2;
+
+  string passwordHash = 3;
+
+  // List of roles associated with the account, e.g.
+  // `log/viewer`, `log/writer`, `db/admin`, etc.
+  // every account assumed to implicitly own the role "user/{id}/owner"
+  repeated string roles = 4;
+
+  // Indicates, whether newly created account is going to be active after creation
+  bool active = 5;
+
+  Profile profile = 6;
+}
+
+message RegisterAccountResponse {
+
+  Account account = 1;
+}
+
+message UpdateAccountRequest {
+
+  message UpdateProfile {
+
+    UpdateAction action = 1;
+
+    message UpdateContact {
+
+      UpdateAction action = 1;
+
+      Contact value = 2;
+    }
+
+    message UpdateImage {
+
+      UpdateAction action = 1;
+
+      Image value = 2;
+    }
+
+    UpdateString displayName = 2;
+
+    repeated UpdateContact contacts = 3;
+
+    repeated UpdateImage images = 4;
+
+    UpdateString gender = 5;
+  }
+
+  string etag = 1;
+
+  string userId = 2;
+
+  UpdateString nickname = 3;
+
+  UpdateString passwordHash = 4;
+
+  repeated UpdateString roles = 5;
+
+  UpdateBool active = 6;
+
+  UpdateProfile profile = 7;
+}
+
+message UpdateAccountResponse {
+
+  Account account = 1;
+
+  Profile profile = 2;
+}
+
+message DeleteAccountsRequest {
+
+  repeated string userIds = 1;
+}
+
+// Account service definition
+service AccountService {
+
+  rpc listAccounts (ListAccountsRequest) returns (ListAccountsResponse) {
+    option (truward.api.http) = {
+      post: "/v1/accounts?offsetToken={offsetToken}&limit={limit}"
+      body: "*"
+    };
+  }
+
+  rpc lookupAccount (LookupAccountRequest) returns (LookupAccountResponse) {
+    option (truward.api.http) = { get: "/v1/accounts/name:{username}" };
+  }
+
+  rpc registerAccount (RegisterAccountRequest) returns (RegisterAccountResponse) {
+    option (truward.api.http) = { post: "/v1/accounts/{username=name:*}" body: "*" };
+  }
+
+  rpc updateAccount (UpdateAccountRequest) returns (UpdateAccountResponse) {
+    option (truward.api.http) = { put: "/v1/accounts/{username=name:*}" body: "*" };
+  }
+
+  rpc deleteAccounts (DeleteAccountsRequest) returns (google.protobuf.Empty) {
+    option (truward.api.http) = { delete: "/v1/accounts" body: "*" };
+  }
+}
