@@ -61,7 +61,7 @@ service IdentityService {
 
 enum ContactType {
 
-  UNKNOWN = 0;
+  UNKNOWN_CONTACT_TYPE = 0;
 
   PHONE = 1;
 
@@ -75,6 +75,36 @@ message Contact {
   ContactType type = 2;
 }
 
+enum CredentialsType {
+
+  // Unknown type, indicates invalid or uninitialized credentials
+  UNKNOWN_CREDENTIALS_TYPE = 0;
+
+  // Indicates, that password provided in plain text
+  PLAIN = 1;
+
+  // Indicates, that password is stored as BCRYPT hash. This is preferred way of storing passwords
+  // See also
+  //  * https://docs.spring.io/spring-security/site/docs/current/apidocs/org/springframework/security/crypto/bcrypt/BCryptPasswordEncoder.html
+  //  * https://bcrypt-generator.com/
+  //  * https://www.dailycred.com/article/bcrypt-calculator
+  //  * https://asecuritysite.com/encryption/bcrypt
+  BCRYPT = 2;
+}
+
+message Credentials {
+
+  // Unique ID given to this credential, shall be unique in a given collection of credentials within a profile
+  // May be empty, however not more than one credential entry shall have an empty ID
+  string id = 1;
+
+  // Credentials string (e.g. password) associated with this credentials type
+  string value = 2;
+
+  // Credentials type, shall not be unknown
+  CredentialsType type = 3;
+}
+
 message Account {
 
   string userId = 1;
@@ -86,7 +116,7 @@ message Account {
   // Valid values are alphanumerical only (only latin alphabet and numbers are allowed)
   string username = 3;
 
-  string passwordHash = 4;
+  repeated Credentials credentials = 4;
 
   // List of roles associated with the account, e.g.
   // `log/viewer`, `log/writer`, `db/admin`, etc.
@@ -187,7 +217,7 @@ message RegisterAccountRequest {
   // Global user alias, can be optional (in this case profile with the contacts should be given)
   string username = 2;
 
-  string passwordHash = 3;
+  repeated Credentials credentials = 3;
 
   // List of roles associated with the account, e.g.
   // `log/viewer`, `log/writer`, `db/admin`, etc.
@@ -234,13 +264,20 @@ message UpdateAccountRequest {
     UpdateString gender = 5;
   }
 
+  message UpdateCredentials {
+
+    UpdateAction action = 1;
+
+    Credentials credentials = 2;
+  }
+
   string etag = 1;
 
   string userId = 2;
 
   UpdateString nickname = 3;
 
-  UpdateString passwordHash = 4;
+  repeated UpdateCredentials credentials = 4;
 
   repeated UpdateString roles = 5;
 

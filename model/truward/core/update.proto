@@ -25,10 +25,14 @@ option objc_class_prefix = "TAPI";
 enum UpdateAction {
 
   // Indicates, that no action should be performed on the associated data
-  NONE = 0;
+  NO_UPDATE = 0;
 
+  // Indicates, that provided value should be added to the collection
+  // When applied to value, indicates that stored value should be overridden with the provided one
   ADD = 1;
 
+  // Indicates, that provided value should be removed from the collection
+  // When applied to values, indicates, that value should be reset
   REMOVE = 2;
 }
 

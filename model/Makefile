@@ -3,18 +3,19 @@
 # However, it does not compile the generated code into final
 # libraries that can be directly used with application code.
 #
-# Syntax example: make OUTPUT=./target LANGUAGE=java
+# Syntax example: make OUTPUT=./target TARGET_LANGUAGE=java
+# Syntax example: make OUTPUT=./target TARGET_LANGUAGE=cpp PROTOINCLUDE=/usr/include
 #
 
 # Choose the output directory
 OUTPUT ?= ./target
 
-# Choose the target language.
-LANGUAGE ?= cpp
+# Choose the target language (java, go, cpp, python).
+TARGET_LANGUAGE ?= java
 
 # Choose grpc plugin
 # TODO: enable grpc support
-#GRPCPLUGIN ?= /usr/local/bin/grpc_$(LANGUAGE)_plugin
+#GRPCPLUGIN ?= /usr/local/bin/grpc_$(TARGET_LANGUAGE)_plugin
 
 # Choose the proto include directory.
 PROTOINCLUDE ?= /usr/local/include
@@ -27,23 +28,30 @@ PROTOC ?= protoc
 # NOTE: if "protoc" command is not in the PATH, you need to modify this file.
 #
 
-ifeq ($(LANGUAGE),go)
-$(error Go source files are not generated from this repository.)
-# TODO: enable Go - see example: /usr/local/include
+ifeq ($(TARGET_LANGUAGE),go)
+  $(error Go source files are not generated from this repository.)
+  # TODO: enable Go - see example: /usr/local/include
 endif
 
 FLAGS+= --proto_path=.:$(PROTOINCLUDE)
 
 # TODO: remove when grpc enabled
-FLAGS+= --$(LANGUAGE)_out=$(OUTPUT)
+FLAGS+= --$(TARGET_LANGUAGE)_out=$(OUTPUT)
 
 # TODO: enable grpc
-#FLAGS+= --$(LANGUAGE)_out=$(OUTPUT) --grpc_out=$(OUTPUT)
+#FLAGS+= --$(TARGET_LANGUAGE)_out=$(OUTPUT) --grpc_out=$(OUTPUT)
 #FLAGS+=	--plugin=protoc-gen-grpc=$(GRPCPLUGIN)
 
 SUFFIX:= pb.cc
 
-DEPS:= $(shell find truward $(PROTOINCLUDE)/google/protobuf -type f -name '*.proto' | sed "s/proto$$/$(SUFFIX)/")
+INCLUDE_DIRS = truward
+ifeq ($(TARGET_LANGUAGE), cpp)
+  INCLUDE_DIRS+= $(PROTOINCLUDE)/google/protobuf
+  SUFFIX:= pb.cc
+endif
+
+
+DEPS:= $(shell find $(INCLUDE_DIRS) -type f -name '*.proto' | sed "s/proto$$/$(SUFFIX)/")
 
 all: $(DEPS)
 

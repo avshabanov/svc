@@ -9,12 +9,12 @@
   </parent>
 
   <artifactId>identity</artifactId>
-
   <packaging>pom</packaging>
   <name>Identity Parent Project</name>
 
   <modules>
     <module>identity-client</module>
+    <module>identity-service</module>
   </modules>
 
   <properties>

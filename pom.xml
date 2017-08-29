@@ -29,6 +29,9 @@
 
     <brikar.version>1.9.37</brikar.version>
 
+    <brikar-protobuf.version>2.0.1</brikar-protobuf.version>
+    <brikar-error.version>2.0.1</brikar-error.version>
+
     <utc-time.version>1.0.6</utc-time.version>
 
     <xodus.version>1.0.4</xodus.version>
@@ -41,6 +44,47 @@
   <dependencyManagement>
 
     <dependencies>
+      <!-- Projects -->
+      <dependency>
+        <groupId>com.truward.services</groupId>
+        <artifactId>api-model</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.services</groupId>
+        <artifactId>identity-model</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+      </dependency>
+
+      <!-- Brikar Protobuf -->
+      <dependency>
+        <groupId>com.truward.brikar.protobuf</groupId>
+        <artifactId>spring-protobuf-http-bin</artifactId>
+        <version>${brikar-protobuf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.protobuf</groupId>
+        <artifactId>spring-protobuf-http-json</artifactId>
+        <version>${brikar-protobuf.version}</version>
+      </dependency>
+
+      <!-- Brikar Error -->
+      <dependency>
+        <groupId>com.truward.brikar.error</groupId>
+        <artifactId>error-model</artifactId>
+        <version>${brikar-error.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.error</groupId>
+        <artifactId>rest-errors</artifactId>
+        <version>${brikar-error.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.error</groupId>
+        <artifactId>rest-errors-parser</artifactId>
+        <version>${brikar-error.version}</version>
+      </dependency>
+
       <!-- Brikar -->
       <dependency>
         <groupId>com.truward.brikar</groupId>
