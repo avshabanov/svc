@@ -6,13 +6,11 @@ import com.truward.brikar.error.StandardRestErrorCode;
 import com.truward.brikar.error.model.ErrorV1;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.NoHandlerFoundException;
-
-import java.nio.file.AccessDeniedException;
 
 /**
  * Custom error handler
@@ -26,20 +24,13 @@ public final class ErrorControllerAdvice {
     this.errors = errors;
   }
 
-  @ExceptionHandler(NoHandlerFoundException.class)
-  @ResponseStatus(value = HttpStatus.NOT_FOUND)
-  @ResponseBody
-  public ErrorV1.ErrorResponse noHandlerFound() {
-    return RestErrors.errorResponse(errors.errorBuilder(StandardRestErrorCode.NOT_FOUND).build());
-  }
-
   // spring security-only exception
   @ExceptionHandler(AccessDeniedException.class)
   @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
   @ResponseBody
-  public ErrorV1.ErrorResponse accessDenied() {
+  public ErrorV1.ErrorResponse accessDenied(AccessDeniedException e) {
     return RestErrors.errorResponse(errors.errorBuilder(StandardRestErrorCode.UNAUTHORIZED)
-        .setMessage("asdasd")
+        .setMessage(e.getMessage())
         .build());
   }
 

@@ -7,7 +7,7 @@ import com.truward.brikar.error.RestErrors;
  */
 public final class IdentityRestErrors extends RestErrors {
 
-  private static final String SOURCE = "IdentityService";
+  public static final String SOURCE = "IdentityService";
 
   @Override
   protected String getSource() {

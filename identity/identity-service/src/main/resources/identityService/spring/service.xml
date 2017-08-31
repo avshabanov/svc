@@ -5,6 +5,10 @@
   <import resource="classpath:/spring/default-service-base.xml"/>
   <import resource="security.xml"/>
 
+  <!-- Message Converters (used in security and webmvc configurations) -->
+  <bean id="protobufHttpMessageConverter" class="com.truward.brikar.protobuf.http.ProtobufHttpMessageConverter" />
+  <bean id="protobufJsonHttpMessageConverter" class="com.truward.brikar.protobuf.http.json.ProtobufJsonHttpMessageConverter" />
+
   <!-- Local bean definitions -->
   <bean class="com.alexshabanov.services.identity.model.error.IdentityRestErrors" />
 </beans>

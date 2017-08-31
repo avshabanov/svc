@@ -20,8 +20,8 @@
   <mvc:annotation-driven>
     <!-- custom marshallers -->
     <mvc:message-converters>
-      <bean class="com.truward.brikar.protobuf.http.ProtobufHttpMessageConverter" />
-      <bean class="com.truward.brikar.protobuf.http.json.ProtobufJsonHttpMessageConverter" />
+      <ref bean="protobufHttpMessageConverter"/>
+      <ref bean="protobufJsonHttpMessageConverter"/>
     </mvc:message-converters>
   </mvc:annotation-driven>
 </beans>

@@ -5,18 +5,22 @@
                 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
   <http security="none" pattern="/"/>
-  <http security="none" pattern="/assets/**"/>
   <http security="none" pattern="/robots.txt"/>
-  <http security="none" pattern="/index.html"/>
-  <http security="none" pattern="/favicon.ico"/>
-  <http security="none" pattern="/g/login"/>
   <http security="none" pattern="/api/diagnostics/**"/>
 
+  <!-- Sets custom details for basic auth -->
+  <beans:bean
+      id="identityService.basicAuthEntryPoint"
+      class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+    <beans:property name="realmName" value="IdentityService" />
+  </beans:bean>
+
+  <!-- Security mapping rules -->
   <http create-session="never" use-expressions="true" auto-config="true" disable-url-rewriting="true">
     <headers disabled="true"/> <!-- Extra headers protection is usually not needed for REST API, or custom one is required -->
     <csrf disabled="true"/> <!-- CSRF protection needs special treatment - enable only in custom configuration with sessions enabled -->
 
-    <http-basic />
+    <http-basic entry-point-ref="identityService.basicAuthEntryPoint" />
     <intercept-url pattern="/api/**" access="isAuthenticated()" />
   </http>
 
