@@ -14,10 +14,12 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +31,8 @@ public class JettyRestErrorHandler extends ErrorPageErrorHandler {
   private static final String GENERIC_ERROR_CODE = "GenericError";
 
   private final List<HttpMessageConverter<Object>> messageConverters = Arrays.asList(
+      // Json should be the first one as it takes priority over binary error representation when error page
+      // is opened in the browser
       new ProtobufJsonHttpMessageConverter(),
       new ProtobufHttpMessageConverter()
   );
@@ -37,23 +41,60 @@ public class JettyRestErrorHandler extends ErrorPageErrorHandler {
   public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
     final HttpHeaders headers = getRequestHeaders(request);
 
-    for (final HttpMessageConverter<Object> converter : messageConverters) {
-      for (final MediaType acceptMediaType : headers.getAccept()) {
-        AbstractHttpConnection connection = AbstractHttpConnection.getCurrentConnection();
-        if (writeRestError(
-            converter,
-            acceptMediaType,
-            response,
-            connection.getResponse().getStatus(),
-            connection.getResponse().getReason())) {
-          connection.getRequest().setHandled(true);
-          return;
+    if (canTryWriteRestError(headers)) {
+      for (final HttpMessageConverter<Object> converter : messageConverters) {
+        for (final MediaType acceptMediaType : headers.getAccept()) {
+          AbstractHttpConnection connection = AbstractHttpConnection.getCurrentConnection();
+          if (writeRestError(
+              converter,
+              acceptMediaType,
+              response,
+              connection.getResponse().getStatus(),
+              connection.getResponse().getReason())) {
+            // error has been written, mark request as handled and skip default error processing
+            connection.getRequest().setHandled(true);
+            return;
+          }
         }
       }
     }
 
-    // error unhandled - delegate to default page error handler
+    // error left unhandled - delegate to default page error handler
     super.handle(target, baseRequest, request, response);
+  }
+
+  @Override
+  protected void writeErrorPageBody(
+      HttpServletRequest request,
+      Writer writer,
+      int code,
+      String message,
+      boolean showStacks) throws IOException {
+    // Code below disables "Powered by Jetty" error message
+    final String uri= request.getRequestURI();
+
+    writeErrorPageMessage(request, writer, code, message, uri);
+
+    if (showStacks) {
+      writeErrorPageStacks(request, writer);
+    }
+
+    writer.write("<hr />");
+  }
+
+  //
+  // Private
+  //
+
+  private boolean canTryWriteRestError(HttpHeaders headers) {
+    for (final MediaType acceptMediaType : headers.getAccept()) {
+      if (MediaType.TEXT_HTML.isCompatibleWith(acceptMediaType)) {
+        // prefer text/html error description whenever possible
+        return false;
+      }
+    }
+
+    return true;
   }
 
   private boolean writeRestError(
@@ -86,11 +127,15 @@ public class JettyRestErrorHandler extends ErrorPageErrorHandler {
     return true;
   }
 
-  private ErrorV1.ErrorResponse getErrorResponse(int statusCode, String reason) {
+  private ErrorV1.ErrorResponse getErrorResponse(int statusCode, @Nullable String reason) {
     String code = GENERIC_ERROR_CODE;
+    String message = reason != null ? reason : "";
     for (final StandardRestErrorCode errorCode : StandardRestErrorCode.values()) {
       if (errorCode.getHttpCode() == statusCode) {
         code = errorCode.getCodeName();
+        if (StringUtils.isEmpty(message)) {
+          message = errorCode.getDescription();
+        }
       }
     }
 
@@ -98,7 +143,7 @@ public class JettyRestErrorHandler extends ErrorPageErrorHandler {
         .setError(ErrorV1.Error.newBuilder()
             .setSource(IdentityRestErrors.SOURCE)
             .setCode(code)
-            .setMessage(reason)
+            .setMessage(message)
             .build())
         .build();
   }
