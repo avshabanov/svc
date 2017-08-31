@@ -13,6 +13,7 @@
   <context:annotation-config/>
 
   <!-- Controllers -->
+  <bean class="com.alexshabanov.services.identity.controller.ErrorControllerAdvice" autowire="constructor"/>
   <bean class="com.alexshabanov.services.identity.controller.IdentityDiagnosticsController" autowire="constructor"/>
 
   <!-- Annotation driven support for MVC controllers -->

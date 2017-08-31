@@ -10,10 +10,14 @@
   <http security="none" pattern="/index.html"/>
   <http security="none" pattern="/favicon.ico"/>
   <http security="none" pattern="/g/login"/>
+  <http security="none" pattern="/api/diagnostics/**"/>
 
-  <http use-expressions="true" auto-config="true" disable-url-rewriting="true">
-    <csrf disabled="true"/>
-    <headers disabled="true"/>
+  <http create-session="never" use-expressions="true" auto-config="true" disable-url-rewriting="true">
+    <headers disabled="true"/> <!-- Extra headers protection is usually not needed for REST API, or custom one is required -->
+    <csrf disabled="true"/> <!-- CSRF protection needs special treatment - enable only in custom configuration with sessions enabled -->
+
+    <http-basic />
+    <intercept-url pattern="/api/**" access="isAuthenticated()" />
   </http>
 
   <beans:bean

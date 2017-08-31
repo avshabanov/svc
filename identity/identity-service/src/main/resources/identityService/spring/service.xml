@@ -6,4 +6,5 @@
   <import resource="security.xml"/>
 
   <!-- Local bean definitions -->
+  <bean class="com.alexshabanov.services.identity.model.error.IdentityRestErrors" />
 </beans>

@@ -27,10 +27,10 @@
     <!-- common libraries -->
     <awssdk.version>1.9.13</awssdk.version>
 
-    <brikar.version>1.9.37</brikar.version>
+    <brikar.version>1.9.38</brikar.version>
 
     <brikar-protobuf.version>2.0.1</brikar-protobuf.version>
-    <brikar-error.version>2.0.1</brikar-error.version>
+    <brikar-error.version>2.0.2</brikar-error.version>
 
     <utc-time.version>1.0.6</utc-time.version>
 
