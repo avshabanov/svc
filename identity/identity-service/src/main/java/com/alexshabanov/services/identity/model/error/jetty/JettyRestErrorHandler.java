@@ -25,6 +25,7 @@ import java.util.List;
 
 /**
  * Custom error handler for all HTTP errors that application can respond with.
+ * TODO: move to the separate package (within brikar-errors).
  */
 @ParametersAreNonnullByDefault
 public class JettyRestErrorHandler extends ErrorPageErrorHandler {
@@ -42,6 +43,7 @@ public class JettyRestErrorHandler extends ErrorPageErrorHandler {
     final HttpHeaders headers = getRequestHeaders(request);
 
     if (canTryWriteRestError(headers)) {
+      // try to write error using rest-friendly error converters
       for (final HttpMessageConverter<Object> converter : messageConverters) {
         for (final MediaType acceptMediaType : headers.getAccept()) {
           AbstractHttpConnection connection = AbstractHttpConnection.getCurrentConnection();
