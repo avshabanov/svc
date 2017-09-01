@@ -10,5 +10,13 @@
   <bean id="protobufJsonHttpMessageConverter" class="com.truward.brikar.protobuf.http.json.ProtobufJsonHttpMessageConverter" />
 
   <!-- Local bean definitions -->
+
+  <!-- Error generator -->
   <bean class="com.alexshabanov.services.identity.model.error.IdentityRestErrors" />
+
+  <!-- Exposed identity service -->
+  <bean
+      id="identityServiceV1"
+      class="com.alexshabanov.services.identity.service.IdentityServiceImplV1"
+      autowire="constructor"/>
 </beans>

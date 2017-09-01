@@ -40,10 +40,24 @@
       <artifactId>spring-protobuf-http-json</artifactId>
     </dependency>
 
-    <!-- Brikar server -->
+    <!-- Jetty errors -->
+    <dependency>
+      <groupId>com.truward.brikar.error</groupId>
+      <artifactId>jetty-rest-errors</artifactId>
+    </dependency>
+
+    <!-- Brikar -->
     <dependency>
       <groupId>com.truward.brikar</groupId>
       <artifactId>brikar-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.truward.brikar.rpc</groupId>
+      <artifactId>brikar-rpc-rest</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.truward.brikar.rpc</groupId>
+      <artifactId>brikar-rpc-explorer-support</artifactId>
     </dependency>
 
     <!-- Spring security -->

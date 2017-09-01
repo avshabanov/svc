@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.truward.brikar</groupId>
     <artifactId>brikar</artifactId>
-    <version>1.9.37</version>
+    <version>1.9.39</version>
   </parent>
 
   <groupId>com.alexshabanov.svc</groupId>
@@ -27,10 +27,10 @@
     <!-- common libraries -->
     <awssdk.version>1.9.13</awssdk.version>
 
-    <brikar.version>1.9.38</brikar.version>
+    <brikar.version>1.9.39</brikar.version>
 
     <brikar-protobuf.version>2.0.1</brikar-protobuf.version>
-    <brikar-error.version>2.0.2</brikar-error.version>
+    <brikar-error.version>2.0.3</brikar-error.version>
 
     <utc-time.version>1.0.6</utc-time.version>
 
@@ -84,6 +84,11 @@
         <artifactId>rest-errors-parser</artifactId>
         <version>${brikar-error.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.error</groupId>
+        <artifactId>jetty-rest-errors</artifactId>
+        <version>${brikar-error.version}</version>
+      </dependency>
 
       <!-- Brikar -->
       <dependency>
@@ -99,6 +104,16 @@
       <dependency>
         <groupId>com.truward.brikar</groupId>
         <artifactId>brikar-server</artifactId>
+        <version>${brikar.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.rpc</groupId>
+        <artifactId>brikar-rpc-rest</artifactId>
+        <version>${brikar.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.rpc</groupId>
+        <artifactId>brikar-rpc-explorer-support</artifactId>
         <version>${brikar.version}</version>
       </dependency>
 

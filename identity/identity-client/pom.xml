@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.truward.brikar</groupId>
     <artifactId>brikar</artifactId>
-    <version>1.9.37</version>
+    <version>1.9.39</version>
   </parent>
 
   <groupId>com.truward.services</groupId>
@@ -65,7 +65,7 @@
   </modules>
 
   <properties>
-    <brikar.version>1.9.37</brikar.version>
+    <brikar.version>1.9.39</brikar.version>
 
     <!--  compiler settings -->
     <maven.compiler.source>1.8</maven.compiler.source>

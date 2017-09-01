@@ -16,9 +16,27 @@
   <bean class="com.alexshabanov.services.identity.controller.ErrorControllerAdvice" autowire="constructor"/>
   <bean class="com.alexshabanov.services.identity.controller.IdentityDiagnosticsController" autowire="constructor"/>
 
+  <!-- Controllers -->
+  <bean class="com.truward.brikar.rpc.explorer.RpcServiceExplorerController">
+    <property name="rpcBindings">
+      <list>
+        <bean class="com.truward.brikar.rpc.support.ServiceInterfaceServletRpcBinding">
+          <constructor-arg>
+            <list>
+              <ref bean="protobufHttpMessageConverter"/>
+              <ref bean="protobufJsonHttpMessageConverter"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg ref="identityServiceV1" />
+          <property name="serviceName" value="IdentityServiceV1"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+
   <!-- Annotation driven support for MVC controllers -->
   <mvc:annotation-driven>
-    <!-- custom marshallers -->
+    <!-- custom marshaller configuration -->
     <mvc:message-converters>
       <ref bean="protobufHttpMessageConverter"/>
       <ref bean="protobufJsonHttpMessageConverter"/>
