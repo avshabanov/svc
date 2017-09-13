@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package alexshabanov.services.identity.dao.model;
+
+option java_package = "com.alexshabanov.services.identity.dao.model";
+option java_outer_classname = "IdentityDB";
+
+message UserRecord {
+
+}

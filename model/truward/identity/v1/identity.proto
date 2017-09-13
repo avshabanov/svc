@@ -105,12 +105,23 @@ message Credentials {
   CredentialsType type = 3;
 }
 
+enum AccountType {
+
+  // Invalid or uninitialized account type
+  UNKNOWN_ACCOUNT_TYPE = 0;
+
+  // Account is a person
+  PERSON = 1;
+
+  // Account is a service
+  SERVICE = 2;
+}
+
 message Account {
 
   string userId = 1;
 
-  // Account type, should be "person" or "service"
-  string type = 2;
+  AccountType type = 2;
 
   // Global user alias, can be optional (in this case profile with the contacts should be given)
   // Valid values are alphanumerical only (only latin alphabet and numbers are allowed)

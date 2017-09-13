@@ -74,6 +74,12 @@
       <artifactId>spring-security-core</artifactId>
     </dependency>
 
+    <!-- Key-Value DAO Xodus -->
+    <dependency>
+      <groupId>com.truward.kvdao</groupId>
+      <artifactId>kvdao-xodus</artifactId>
+    </dependency>
+
     <!-- test scope -->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -81,5 +87,14 @@
     </dependency>
 
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.xolstice.maven.plugins</groupId>
+        <artifactId>protobuf-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>
 

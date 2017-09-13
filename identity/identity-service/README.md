@@ -34,3 +34,5 @@ curl -H 'Accept: application/json' 127.0.0.1:8080/api/diagnostics/status?mode=fu
 ```
 curl -H 'Accept: application/json' 127.0.0.1:8080/api/diagnostics/status?mode=UnknownMode -v
 ```
+
+# Generate BCRYPT'ed passwords

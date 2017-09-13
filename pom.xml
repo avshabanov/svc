@@ -169,6 +169,13 @@
         <version>${xodus.version}</version>
       </dependency>
 
+      <!-- KVDAO -->
+      <dependency>
+        <groupId>com.truward.kvdao</groupId>
+        <artifactId>kvdao-xodus</artifactId>
+        <version>0.0.1</version>
+      </dependency>
+
       <!-- DB Drivers -->
       <dependency>
         <groupId>com.h2database</groupId>
