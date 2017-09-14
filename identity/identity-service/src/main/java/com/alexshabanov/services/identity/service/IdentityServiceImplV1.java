@@ -13,7 +13,7 @@ public final class IdentityServiceImplV1 implements IdentityService {
   public ListAccountsResponse listAccounts(ListAccountsRequest request) {
     return ListAccountsResponse.newBuilder()
         .addAccounts(Account.newBuilder()
-            .setType("profile")
+            .setType(AccountType.PERSON)
             .build())
         .build();
   }

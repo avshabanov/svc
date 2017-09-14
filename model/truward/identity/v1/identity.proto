@@ -57,7 +57,9 @@ service IdentityService {
   }
 }
 
-
+//
+// Models
+//
 
 enum ContactType {
 
@@ -157,11 +159,19 @@ message Account {
   string etag = 9;
 }
 
+enum ImageType {
+
+  UNKNOWN_IMAGE_TYPE = 0;
+
+  AVATAR = 1;
+
+  PHOTO = 2;
+}
+
 message Image {
 
-  // A type of image, allowed values:
-  // `avatar`, `photo`
-  string kind = 1;
+  // A type of image
+  ImageType type = 1;
 
   // An URL to the image, e.g.
   // https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=120

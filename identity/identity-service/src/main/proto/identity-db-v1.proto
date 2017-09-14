@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package alexshabanov.services.identity.dao.model;
+
+import "google/protobuf/timestamp.proto";
+
+option java_package = "com.alexshabanov.services.identity.dao.model";
+option java_outer_classname = "Idb1";
+
+//
+// Models
+//
+
+enum ContactType {
+
+  UNKNOWN_CONTACT_TYPE = 0;
+
+  PHONE = 1;
+
+  EMAIL = 2;
+}
+
+message Contact {
+
+  string value = 1;
+
+  ContactType type = 2;
+}
+
+enum CredentialsType {
+
+  // Unknown type, indicates invalid or uninitialized credentials
+  UNKNOWN_CREDENTIALS_TYPE = 0;
+
+  // Indicates, that password provided in plain text
+  PLAIN = 1;
+
+  // Indicates, that password is stored as BCRYPT hash. This is preferred way of storing passwords
+  // See also
+  //  * https://docs.spring.io/spring-security/site/docs/current/apidocs/org/springframework/security/crypto/bcrypt/BCryptPasswordEncoder.html
+  //  * https://bcrypt-generator.com/
+  //  * https://www.dailycred.com/article/bcrypt-calculator
+  //  * https://asecuritysite.com/encryption/bcrypt
+  BCRYPT = 2;
+}
+
+message Credentials {
+
+  // Unique ID given to this credential, shall be unique in a given collection of credentials within a profile
+  // May be empty, however not more than one credential entry shall have an empty ID
+  string id = 1;
+
+  // Credentials string (e.g. password) associated with this credentials type
+  string value = 2;
+
+  // Credentials type, shall not be unknown
+  CredentialsType type = 3;
+}
+
+enum AccountType {
+
+  // Invalid or uninitialized account type
+  UNKNOWN_ACCOUNT_TYPE = 0;
+
+  // Account is a person
+  PERSON = 1;
+
+  // Account is a service
+  SERVICE = 2;
+}
+
+
+enum ImageType {
+
+  UNKNOWN_IMAGE_TYPE = 0;
+
+  AVATAR = 1;
+
+  PHOTO = 2;
+}
+
+message Image {
+
+  // A type of image
+  ImageType type = 1;
+
+  // An URL to the image, e.g.
+  // https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=120
+  string url = 2;
+}
+
+message Profile {
+
+  // Full display name, e.g. `John Doe`
+  string displayName = 1;
+
+  // Given name, e.g. `John`
+  string givenName = 2;
+
+  // Family name, e.g. `Doe`
+  string familyName = 3;
+
+  // List of images, associated with this profile
+  repeated Image images = 4;
+
+  // List of user contacts
+  repeated Contact contacts = 5;
+
+  // Optional, user gender code, allowed values if set: `F` and `M`
+  string gender = 6;
+}
+
+message UserRecord {
+
+  AccountType type = 1;
+
+  // Global user alias, can be optional (in this case profile with the contacts should be given)
+  // Valid values are alphanumerical only (only latin alphabet and numbers are allowed)
+  string username = 2;
+
+  repeated Credentials credentials = 3;
+
+  // List of roles associated with the account, e.g.
+  // `log/viewer`, `log/writer`, `db/admin`, etc.
+  repeated string roles = 4;
+
+  // Time, when account was created
+  google.protobuf.Timestamp created = 5;
+
+  // Time, when account was updated
+  google.protobuf.Timestamp updated = 6;
+
+  // Indicates, whether current account is active
+  bool active = 7;
+
+  // Record version, should be used for concurrency control
+  int64 version = 8;
+
+  // Associated optional user profile, exists only for PERSON account types
+  Profile profile = 9;
+}
